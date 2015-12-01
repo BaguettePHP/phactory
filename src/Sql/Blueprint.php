@@ -62,7 +62,7 @@ class Blueprint
         unset($this->_associations[$name]);
     }
 
-    /*
+    /**
      * Build a Row from this Blueprint. Optionally use an array
      * of associated objects to set fk columns.
      *
@@ -103,7 +103,7 @@ class Blueprint
         return $built;
     }
 
-    /*
+    /**
      * Reify a Blueprint as a Row. Optionally use an array
      * of associated objects to set fk columns.
      *
@@ -134,7 +134,7 @@ class Blueprint
         return $built;
     }
 
-    /*
+    /**
      * Truncate table in the database.
      */
     public function recall()

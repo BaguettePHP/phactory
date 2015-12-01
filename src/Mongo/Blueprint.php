@@ -50,7 +50,7 @@ class Blueprint
         unset($this->_associations[$name]);
     }
 
-    /*
+    /**
      * Build the document as an array, but don't save it to the db.
      *
      * @param array $overrides field => value pairs which override the defaults for this blueprint
@@ -88,7 +88,7 @@ class Blueprint
         return $data;
     }
 
-    /*
+    /**
      * Create document in the database and return it.
      *
      * @param array $overrides field => value pairs which override the defaults for this blueprint
@@ -103,7 +103,7 @@ class Blueprint
         return $data;
     }
 
-    /*
+    /**
      * Empty the collection in the database.
      */
     public function recall()

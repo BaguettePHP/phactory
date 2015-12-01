@@ -4,12 +4,12 @@ namespace Phactory\Sql;
 
 class Phactory
 {
-    /*
+    /**
      * Array of table name => Blueprint
      */
     protected $_blueprints = [];
 
-    /*
+    /**
      * PDO database connection
      */
     protected $_pdo;
@@ -24,7 +24,7 @@ class Phactory
         $this->_pdo = $pdo;
     }
 
-    /*
+    /**
      * Set the PDO object to use for database connection.
      *
      * @param object $pdo PDO object
@@ -34,7 +34,7 @@ class Phactory
         $this->_pdo = $pdo;
     }
 
-    /*
+    /**
      * Get the PDO database connection object.
      *
      * @return object PDO
@@ -44,7 +44,7 @@ class Phactory
         return $this->_pdo;
     }
 
-    /*
+    /**
      * Define the default values to use when constructing
      * a row in the specified table.
      *
@@ -62,7 +62,7 @@ class Phactory
         $this->_blueprints[$blueprint_name] = $blueprint;
     }
 
-    /*
+    /**
      * alias for define per @jblotus pull request
      * eventually we should just rename the original function
      */
@@ -71,7 +71,7 @@ class Phactory
         $this->define($blueprint_name, $defaults, $associations);
     }
 
-    /*
+    /**
      * Instantiate a row in the specified table, optionally
      * overriding some or all of the default values.
      * The row is saved to the database, and returned
@@ -86,7 +86,7 @@ class Phactory
         return $this->createWithAssociations($table, [], $overrides);
     }
 
-    /*
+    /**
      * Build a Row object, optionally
      * overriding some or all of the default values.
      * The row is not saved to the database.
@@ -100,7 +100,7 @@ class Phactory
         return $this->buildWithAssociations($table, [], $overrides);
     }
 
-    /*
+    /**
      * Instantiate a row in the specified table, optionally
      * overriding some or all of the default values.
      * The row is saved to the database, and returned
@@ -120,7 +120,7 @@ class Phactory
         return $blueprint->create($overrides, $associations);
     }
 
-    /*
+    /**
      * Build a Row object, optionally
      * overriding some or all of the default values.
      * The row is not saved to the database.
@@ -145,7 +145,7 @@ class Phactory
         return $blueprint->build($overrides, $associations);
     }
 
-    /*
+    /**
      * Get a row from the database as a Row.
      * $byColumn is like array('id' => 123).
      *
@@ -194,7 +194,7 @@ class Phactory
         return $rows;
     }
 
-    /*
+    /**
      * Delete created Row objects from the database.
      */
     public function recall()
@@ -204,7 +204,7 @@ class Phactory
         }
     }
 
-    /*
+    /**
      * Delete created objects from the database, clear defined
      * blueprints, and clear stored inflection exceptions.
      */
@@ -223,7 +223,7 @@ class Phactory
         return new Association\ManyToMany($to_table, $join_table, $from_column, $from_join_column, $to_join_column, $to_column);
     }
 
-    /*
+    /**
      * Create a many-to-one association object for use in define().
      *
      * @param string $to_table the table to associate with
@@ -239,7 +239,7 @@ class Phactory
         return new Association\ManyToOne($to_table, $from_column, $to_column);
     }
 
-    /*
+    /**
      * Create a one-to-one association object for use in define().
      *
      * @param string $to_table the table to associate with
@@ -255,7 +255,7 @@ class Phactory
         return new Association\OneToOne($to_table, $from_column, $to_column);
     }
 
-    /*
+    /**
      * Specify an exception for table name inflection.
      * For example, if your table of fish is called 'fishes',
      * call setInflection('fish', 'fishes')

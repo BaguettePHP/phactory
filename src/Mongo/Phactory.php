@@ -4,12 +4,12 @@ namespace Phactory\Mongo;
 
 class Phactory
 {
-    /*
+    /**
      * Array of collection name => Blueprint
      */
     protected $_blueprints = [];
 
-    /*
+    /**
      * Mongo database object
      */
     protected $_db;
@@ -24,7 +24,7 @@ class Phactory
         $this->_db = $mongo;
     }
 
-    /*
+    /**
      * Set the Mongo object to use for database connection.
      *
      * @param object $db Mongo object
@@ -34,7 +34,7 @@ class Phactory
         $this->_db = $db;
     }
 
-    /*
+    /**
      * Get the Mongo database object.
      *
      * @return object Mongo 
@@ -44,7 +44,7 @@ class Phactory
         return $this->_db;
     }
 
-    /*
+    /**
      * Define the default values to use when constructing
      * a document in the specified collection.
      *
@@ -62,7 +62,7 @@ class Phactory
         $this->_blueprints[$blueprint_name] = $blueprint;
     }
 
-    /*
+    /**
     * alias for define per @jblotus pull request
     * eventually we should just rename the original function
     */
@@ -71,7 +71,7 @@ class Phactory
         $this->define($blueprint_name, $defaults, $associations);
     }
 
-    /*
+    /**
      * Instantiate a document in the specified collection, optionally
      * overriding some or all of the default values.
      * The document is saved to the database and returned as an array.
@@ -85,7 +85,7 @@ class Phactory
         return $this->createWithAssociations($blueprint_name, [], $overrides);
     }
 
-    /*
+    /**
      * Build a document as an array, optionally
      * overriding some or all of the default values.
      * The document is not saved to the database.
@@ -99,7 +99,7 @@ class Phactory
         return $this->buildWithAssociations($blueprint_name, [], $overrides);
     }
 
-    /*
+    /**
      * Instantiate a document in the specified collection, optionally
      * overriding some or all of the default values.
      * The document is saved to the database, and returned as an array.
@@ -118,7 +118,7 @@ class Phactory
         return $blueprint->create($overrides, $associations);
     }
 
-    /*
+    /**
      * Build a document as an array, optionally
      * overriding some or all of the default values.
      * The document is not saved to the database.
@@ -137,7 +137,7 @@ class Phactory
         return $blueprint->build($overrides, $associations);
     }
 
-    /*
+    /**
      * Get a document from the database as an array.
      *
      * @param string $collection_name name of the collection 
@@ -155,7 +155,7 @@ class Phactory
         return $collection->findOne($query);
     }
 
-    /*
+    /**
      * Get results from the database as a cursor.
      *
      * @param string $collection_name name of the collection 
@@ -173,7 +173,7 @@ class Phactory
         return $collection->find($query);
     }
 
-    /*
+    /**
      * Create an embeds-one association object for use in define().
      *
      * @param string $collection_name the singular name of the collection to associate with
@@ -183,7 +183,7 @@ class Phactory
         return new Association\EmbedsOne($collection_name);
     }
 
-    /*
+    /**
      * Create an embeds-many association object for use in define().
      *
      * @param string $collection_name the singular name of the collection to associate with
@@ -193,7 +193,7 @@ class Phactory
         return new Association\EmbedsMany($collection_name);
     }
 
-    /*
+    /**
      * Delete created documents from the database.
      */
     public function recall()
@@ -203,7 +203,7 @@ class Phactory
         }
     }
 
-    /*
+    /**
      * Delete created objects from the database, clear defined
      * blueprints, and clear stored inflection exceptions.
      */
@@ -214,7 +214,7 @@ class Phactory
         Inflector::reset();
     }
 
-    /*
+    /**
      * Specify an exception for collection name inflection.
      * For example, if your collection of fish is called 'fishes',
      * call setInflection('fish', 'fishes')
