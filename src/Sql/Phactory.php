@@ -2,11 +2,12 @@
 
 namespace Phactory\Sql;
 
-class Phactory {
+class Phactory
+{
     /*
      * Array of table name => Blueprint
      */
-    protected $_blueprints = array();
+    protected $_blueprints = [];
 
     /*
      * PDO database connection
@@ -14,11 +15,12 @@ class Phactory {
     protected $_pdo;
 
     /**
-     * Constructs a Phactory object for testing SQL databases
+     * Constructs a Phactory object for testing SQL databases.
      *
      * @param \PDO $pdo A PDO database connection to test with
      */
-    public function __construct(\PDO $pdo) {
+    public function __construct(\PDO $pdo)
+    {
         $this->_pdo = $pdo;
     }
 
@@ -27,7 +29,8 @@ class Phactory {
      *
      * @param object $pdo PDO object
      */
-    public function setConnection($pdo) {
+    public function setConnection($pdo)
+    {
         $this->_pdo = $pdo;
     }
 
@@ -36,7 +39,8 @@ class Phactory {
      *
      * @return object PDO
      */
-    public function getConnection() {
+    public function getConnection()
+    {
         return $this->_pdo;
     }
 
@@ -48,8 +52,9 @@ class Phactory {
      * @param array $defaults key => value pairs of column => value, or a phactory_blueprint
      * @param array $associations array of phactory_associations
      */
-    public function define($blueprint_name, $defaults = array(), $associations = array()) {
-        if($defaults instanceof Blueprint) {
+    public function define($blueprint_name, $defaults = [], $associations = [])
+    {
+        if ($defaults instanceof Blueprint) {
             $blueprint = $defaults;
         } else {
             $blueprint = new Blueprint($blueprint_name, $defaults, $associations, $this);
@@ -61,7 +66,8 @@ class Phactory {
      * alias for define per @jblotus pull request
      * eventually we should just rename the original function
      */
-    public function defineBlueprint($blueprint_name, $defaults = array(), $associations = array()) {
+    public function defineBlueprint($blueprint_name, $defaults = [], $associations = [])
+    {
         $this->define($blueprint_name, $defaults, $associations);
     }
 
@@ -75,8 +81,9 @@ class Phactory {
      * @param array $overrides key => value pairs of column => value
      * @return object Row
      */
-    public function create($table, $overrides = array()) {
-        return $this->createWithAssociations($table, array(), $overrides);
+    public function create($table, $overrides = [])
+    {
+        return $this->createWithAssociations($table, [], $overrides);
     }
 
     /*
@@ -88,8 +95,9 @@ class Phactory {
      * @param array $overrides key => value pairs of column => value
      * @return object Row
      */
-    public function build($table, $overrides = array()) {
-        return $this->buildWithAssociations($table, array(), $overrides);
+    public function build($table, $overrides = [])
+    {
+        return $this->buildWithAssociations($table, [], $overrides);
     }
 
     /*
@@ -103,11 +111,12 @@ class Phactory {
      * @param array $overrides key => value pairs of column => value
      * @return object Row
      */
-    public function createWithAssociations($blueprint_name, $associations = array(), $overrides = array()) {
-        if(! ($blueprint = $this->_blueprints[$blueprint_name]) ) {
+    public function createWithAssociations($blueprint_name, $associations = [], $overrides = [])
+    {
+        if (!($blueprint = $this->_blueprints[$blueprint_name])) {
             throw new \Exception("No blueprint defined for '$blueprint_name'");
         }
-            
+
         return $blueprint->create($overrides, $associations);
     }
 
@@ -121,17 +130,18 @@ class Phactory {
      * @param array $overrides key => value pairs of column => value
      * @return object Row
      */
-    public function buildWithAssociations($blueprint_name, $associations = array(), $overrides = array()) {
-        if(! ($blueprint = $this->_blueprints[$blueprint_name]) ) {
+    public function buildWithAssociations($blueprint_name, $associations = [], $overrides = [])
+    {
+        if (!($blueprint = $this->_blueprints[$blueprint_name])) {
             throw new \Exception("No blueprint defined for '$blueprint_name'");
         }
 
-        foreach($associations as $association) {
-            if($association instanceof Association\ManyToMany) {
-                throw new \Exception("ManyToMany associations cannot be used in Phactory::build()");
+        foreach ($associations as $association) {
+            if ($association instanceof Association\ManyToMany) {
+                throw new \Exception('ManyToMany associations cannot be used in Phactory::build()');
             }
         }
-            
+
         return $blueprint->build($overrides, $associations);
     }
 
@@ -143,49 +153,53 @@ class Phactory {
      * @param array $byColumn
      * @return object Row
      */
-    public function get($table_name, $byColumns) {		
+    public function get($table_name, $byColumns)
+    {
         $all = $this->getAll($table_name, $byColumns);
+
         return array_shift($all);
     }
 
-    public function getAll($table_name, $byColumns) {
-        if(!is_array($byColumns)) {
+    public function getAll($table_name, $byColumns)
+    {
+        if (!is_array($byColumns)) {
             throw new \Exception("\$byColumns must be an associative array of 'column => value' pairs");
         }
 
         $table = new Table($table_name, true, $this);
-				
-        $equals = array();
-        $params = array();
-		foreach($byColumns as $field => $value)
-		{
-            $equals[] = $table->quoteIdentifier($field) . ' = ?';
-			$params[] = $value;
-		}
-								
+
+        $equals = [];
+        $params = [];
+        foreach ($byColumns as $field => $value) {
+            $equals[] = $table->quoteIdentifier($field).' = ?';
+            $params[] = $value;
+        }
+
         $where_sql = implode(' AND ', $equals);
-        $sql = "SELECT * FROM " . $table->quoteIdentifier($table->getName()) . " WHERE " . $where_sql;
+        $sql = 'SELECT * FROM '.$table->quoteIdentifier($table->getName()).' WHERE '.$where_sql;
 
         $stmt = $this->_pdo->prepare($sql);
         $r = $stmt->execute($params);
 
-        if($r === false){
+        if ($r === false) {
             $error = $stmt->errorInfo();
             Logger::error('SQL statement failed: '.$sql.' ERROR MESSAGE: '.$error[2].' ERROR CODE: '.$error[1]);
         }
 
-        $rows = array();
-        while($result = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+        $rows = [];
+        while ($result = $stmt->fetch(\PDO::FETCH_ASSOC)) {
             $rows[] = new Row($table_name, $result, $this);
         }
+
         return $rows;
     }
 
     /*
      * Delete created Row objects from the database.
      */
-    public function recall() {
-        foreach($this->_blueprints as $blueprint) {
+    public function recall()
+    {
+        foreach ($this->_blueprints as $blueprint) {
             $blueprint->recall();
         }
     }
@@ -194,15 +208,18 @@ class Phactory {
      * Delete created objects from the database, clear defined
      * blueprints, and clear stored inflection exceptions.
      */
-    public function reset() {
+    public function reset()
+    {
         $this->recall();
-        $this->_blueprints = array();
+        $this->_blueprints = [];
         Inflector::reset();
     }
 
-    public function manyToMany($to_table, $join_table, $from_column = null, $from_join_column = null, $to_join_column = null, $to_column = null) {
+    public function manyToMany($to_table, $join_table, $from_column = null, $from_join_column = null, $to_join_column = null, $to_column = null)
+    {
         $to_table = new Table($to_table, true, $this);
         $join_table = new Table($join_table, false, $this);
+
         return new Association\ManyToMany($to_table, $join_table, $from_column, $from_join_column, $to_join_column, $to_column);
     }
 
@@ -215,8 +232,10 @@ class Phactory {
      *
      * @return object Association\ManyToOne
      */
-    public function manyToOne($to_table, $from_column = null, $to_column = null) {
+    public function manyToOne($to_table, $from_column = null, $to_column = null)
+    {
         $to_table = new Table($to_table, true, $this);
+
         return new Association\ManyToOne($to_table, $from_column, $to_column);
     }
 
@@ -229,22 +248,24 @@ class Phactory {
      *
      * @return object Association\OneToOne
      */
-    public function oneToOne($to_table, $from_column, $to_column = null) {
+    public function oneToOne($to_table, $from_column, $to_column = null)
+    {
         $to_table = new Table($to_table, true, $this);
+
         return new Association\OneToOne($to_table, $from_column, $to_column);
     }
 
-	/*
-	 * Specify an exception for table name inflection.
+    /*
+     * Specify an exception for table name inflection.
      * For example, if your table of fish is called 'fishes',
      * call setInflection('fish', 'fishes')
      *
-	 * @param string $singular singular form of the word.
-	 * @param string $plural plural form of the word.
-	 *
-	 */
-	public function setInflection($singular, $plural){
-		Inflector::addException($singular, $plural);
-	}
-
+     * @param string $singular singular form of the word.
+     * @param string $plural plural form of the word.
+     *
+     */
+    public function setInflection($singular, $plural)
+    {
+        Inflector::addException($singular, $plural);
+    }
 }

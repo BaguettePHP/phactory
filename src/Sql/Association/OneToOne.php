@@ -2,4 +2,6 @@
 
 namespace Phactory\Sql\Association;
 
-class OneToOne extends ManyToOne { }
+class OneToOne extends ManyToOne
+{
+}

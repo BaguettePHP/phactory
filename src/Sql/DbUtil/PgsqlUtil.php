@@ -2,13 +2,12 @@
 
 namespace Phactory\Sql\DbUtil;
 
-use Phactory\Sql\Phactory;
-
 class PgsqlUtil extends AbstractDbUtil
 {
     protected $_quoteChar = '"';
 
-	public function getPrimaryKey($table) {
+    public function getPrimaryKey($table)
+    {
         $query = "
             SELECT
                 pg_attribute.attname,
@@ -23,20 +22,23 @@ class PgsqlUtil extends AbstractDbUtil
         ";
         $stmt = $this->_pdo->query($query);
         $result = $stmt->fetch();
-        return $result['attname'];
-	}
 
-    public function getColumns($table) {
+        return $result['attname'];
+    }
+
+    public function getColumns($table)
+    {
         $query = "
             SELECT column_name
             FROM information_schema.columns
             WHERE table_name = '$table'
         ";
         $stmt = $this->_pdo->query($query);
-        $columns = array();
-        while($row = $stmt->fetch()) {
+        $columns = [];
+        while ($row = $stmt->fetch()) {
             $columns[] = $row['column_name'];
         }
+
         return $columns;
     }
 }

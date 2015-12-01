@@ -2,11 +2,12 @@
 
 namespace Phactory\Mongo;
 
-class Phactory {
+class Phactory
+{
     /*
      * Array of collection name => Blueprint
      */
-    protected $_blueprints = array();
+    protected $_blueprints = [];
 
     /*
      * Mongo database object
@@ -14,11 +15,12 @@ class Phactory {
     protected $_db;
 
     /**
-     * Constructs a Phactory object for testing MongoDB databases
+     * Constructs a Phactory object for testing MongoDB databases.
      *
      * @param \MongoDB $mongo A MongoDB database connection to test with
      */
-    public function __construct(\MongoDB $mongo) {
+    public function __construct(\MongoDB $mongo)
+    {
         $this->_db = $mongo;
     }
 
@@ -27,7 +29,8 @@ class Phactory {
      *
      * @param object $db Mongo object
      */
-    public function setDb(\MongoDB $db) {
+    public function setDb(\MongoDB $db)
+    {
         $this->_db = $db;
     }
 
@@ -36,7 +39,8 @@ class Phactory {
      *
      * @return object Mongo 
      */
-    public function getDb() {
+    public function getDb()
+    {
         return $this->_db;
     }
 
@@ -48,8 +52,9 @@ class Phactory {
      * @param array $defaults key => value pairs of field => value, or a phactory_blueprint
      * @param array $associations array of phactory_associations
      */
-    public function define($blueprint_name, $defaults, $associations = array()) {
-        if($defaults instanceof Blueprint) {
+    public function define($blueprint_name, $defaults, $associations = [])
+    {
+        if ($defaults instanceof Blueprint) {
             $blueprint = $defaults;
         } else {
             $blueprint = new Blueprint($blueprint_name, $defaults, $associations, $this);
@@ -61,7 +66,8 @@ class Phactory {
     * alias for define per @jblotus pull request
     * eventually we should just rename the original function
     */
-    public function defineBlueprint($blueprint_name, $defaults, $associations = array()) {
+    public function defineBlueprint($blueprint_name, $defaults, $associations = [])
+    {
         $this->define($blueprint_name, $defaults, $associations);
     }
 
@@ -74,8 +80,9 @@ class Phactory {
      * @param array $overrides key => value pairs of column => value
      * @return array
      */
-    public function create($blueprint_name, $overrides = array()) {
-        return $this->createWithAssociations($blueprint_name, array(), $overrides);
+    public function create($blueprint_name, $overrides = [])
+    {
+        return $this->createWithAssociations($blueprint_name, [], $overrides);
     }
 
     /*
@@ -87,8 +94,9 @@ class Phactory {
      * @param array $overrides key => value pairs of column => value
      * @return array
      */
-    public function build($blueprint_name, $overrides = array()) {
-        return $this->buildWithAssociations($blueprint_name, array(), $overrides);
+    public function build($blueprint_name, $overrides = [])
+    {
+        return $this->buildWithAssociations($blueprint_name, [], $overrides);
     }
 
     /*
@@ -101,11 +109,12 @@ class Phactory {
      * @param array $overrides key => value pairs of field => value
      * @return array
      */
-    public function createWithAssociations($blueprint_name, $associations = array(), $overrides = array()) {
-        if(! ($blueprint = $this->_blueprints[$blueprint_name]) ) {
+    public function createWithAssociations($blueprint_name, $associations = [], $overrides = [])
+    {
+        if (!($blueprint = $this->_blueprints[$blueprint_name])) {
             throw new \Exception("No blueprint defined for '$blueprint_name'");
         }
-            
+
         return $blueprint->create($overrides, $associations);
     }
 
@@ -119,11 +128,12 @@ class Phactory {
      * @param array $overrides key => value pairs of field => value
      * @return array
      */
-    public function buildWithAssociations($blueprint_name, $associations = array(), $overrides = array()) {
-        if(! ($blueprint = $this->_blueprints[$blueprint_name]) ) {
+    public function buildWithAssociations($blueprint_name, $associations = [], $overrides = [])
+    {
+        if (!($blueprint = $this->_blueprints[$blueprint_name])) {
             throw new \Exception("No blueprint defined for '$blueprint_name'");
         }
-            
+
         return $blueprint->build($overrides, $associations);
     }
 
@@ -134,13 +144,14 @@ class Phactory {
      * @param array $query a MongoDB query
      * @return array 
      */
-    public function get($collection_name, $query) {		
-        if(!is_array($query)) {
+    public function get($collection_name, $query)
+    {
+        if (!is_array($query)) {
             throw new \Exception("\$query must be an associative array of 'field => value' pairs");
         }
 
         $collection = new Collection($collection_name, true, $this);
-				
+
         return $collection->findOne($query);
     }
 
@@ -151,13 +162,14 @@ class Phactory {
      * @param array $query a MongoDB query
      * @return MongoCursor
      */
-    public function getAll($collection_name, $query = array()) {		
-        if(!is_array($query)) {
+    public function getAll($collection_name, $query = [])
+    {
+        if (!is_array($query)) {
             throw new \Exception("\$query must be an associative array of 'field => value' pairs");
         }
 
         $collection = new Collection($collection_name, true, $this);
-				
+
         return $collection->find($query);
     }
 
@@ -166,7 +178,8 @@ class Phactory {
      *
      * @param string $collection_name the singular name of the collection to associate with
      */
-    public function embedsOne($collection_name) {
+    public function embedsOne($collection_name)
+    {
         return new Association\EmbedsOne($collection_name);
     }
 
@@ -175,15 +188,17 @@ class Phactory {
      *
      * @param string $collection_name the singular name of the collection to associate with
      */
-    public function embedsMany($collection_name) {
+    public function embedsMany($collection_name)
+    {
         return new Association\EmbedsMany($collection_name);
     }
 
     /*
      * Delete created documents from the database.
      */
-    public function recall() {
-        foreach($this->_blueprints as $blueprint) {
+    public function recall()
+    {
+        foreach ($this->_blueprints as $blueprint) {
             $blueprint->recall();
         }
     }
@@ -192,23 +207,24 @@ class Phactory {
      * Delete created objects from the database, clear defined
      * blueprints, and clear stored inflection exceptions.
      */
-    public function reset() {
+    public function reset()
+    {
         $this->recall();
-        $this->_blueprints = array();
+        $this->_blueprints = [];
         Inflector::reset();
     }
 
-	/*
-	 * Specify an exception for collection name inflection.
+    /*
+     * Specify an exception for collection name inflection.
      * For example, if your collection of fish is called 'fishes',
      * call setInflection('fish', 'fishes')
      *
-	 * @param string $singular singular form of the word.
-	 * @param string $plural plural form of the word.
-	 *
-	 */
-	public function setInflection($singular, $plural){
-		Inflector::addException($singular, $plural);
-	}
-
+     * @param string $singular singular form of the word.
+     * @param string $plural plural form of the word.
+     *
+     */
+    public function setInflection($singular, $plural)
+    {
+        Inflector::addException($singular, $plural);
+    }
 }
