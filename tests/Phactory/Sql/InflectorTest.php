@@ -7,39 +7,47 @@ namespace Phactory\Sql;
  */
 class InflectorTest extends \PHPUnit_Framework_TestCase
 {
-    public function setUp() {
+    public function setUp()
+    {
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         Inflector::reset();
     }
 
-    public function inflectionProvider() {
+    public function inflectionProvider()
+    {
         return array(
-                array('test', 'tests'),
-                array('octopus', 'octopi'),
-                array('fish', 'fish'),
-                array('user', 'users'));
+            array('test', 'tests'),
+            array('octopus', 'octopuses'),
+            array('fish', 'fish'),
+            array('user', 'users'),
+        );
     }
 
-    public function inflectionExceptionProvider() {
+    public function inflectionExceptionProvider()
+    {
         return array(
-                array('fish', 'fishes'),
-                array('content', 'content'),
-                array('anecdote', 'data'));
+            array('fish', 'fishes'),
+            array('content', 'content'),
+            array('anecdote', 'data'),
+        );
     }
 
     /**
      * @dataProvider inflectionProvider
      */
-    public function testPluralize($singular, $plural) {
+    public function testPluralize($singular, $plural)
+    {
         $this->assertEquals(Inflector::pluralize($singular), $plural);
     }
 
     /**
      * @dataProvider inflectionExceptionProvider
      */
-    public function testAddException($singular, $plural) {
+    public function testAddException($singular, $plural)
+    {
         $this->assertNotEquals(Inflector::pluralize($singular), $plural);
         Inflector::addException($singular, $plural);
         $this->assertEquals(Inflector::pluralize($singular), $plural);
