@@ -1,6 +1,8 @@
 # Phactory: PHP Database Object Factory for Unit Testing
 
 [![Build Status](https://travis-ci.org/BaguettePHP/phactory.svg)](https://travis-ci.org/BaguettePHP/phactory)
+[![Package version](http://img.shields.io/packagist/v/zonuexe/phactory.svg)](https://packagist.org/packages/zonuexe/objectsystem)
+[![Apache License 2.0](https://img.shields.io/github/license/BaguettePHP/phactory.svg)](https://spdx.org/licenses/Apache-2.0)
 
 ## What is it?
 
