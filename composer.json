@@ -19,6 +19,8 @@
         "ext-mongo": "Allows use of Phactory for testing against MongoDB databases"
     },
     "autoload": {
-        "psr-0": {"Phactory": "lib/"}
+        "psr-4": {
+            "Phactory\\": "src/"
+        }
     }
 }
