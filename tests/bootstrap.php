@@ -9,4 +9,4 @@ if (!file_exists(dirname(__DIR__).DIRECTORY_SEPARATOR.'composer.lock')) {
 }
 
 // Include the Composer autoloader
-include realpath(dirname(__FILE__).'/../vendor/autoload.php');
+include realpath(__DIR__ . '/../vendor/autoload.php');
