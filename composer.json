@@ -1,7 +1,8 @@
 {
-    "name": "chriskite/phactory",
+    "name": "zonuexe/phactory",
     "description": "A Database Factory for PHP Unit Tests",
     "keywords": ["testing","database","mysql","sqlite","mongodb"],
+    "license": "Apache-2.0",
     "homepage": "http://phactory.org",
     "require": {
         "php": ">=5.3.0",
