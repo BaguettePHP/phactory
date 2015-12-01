@@ -9,6 +9,10 @@ class PhactoryTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
+        if (!class_exists('Mongo')) {
+            $this->markTestIncomplete("Mongo not installed.");
+        }
+
         $this->mongo = new \Mongo();
         $this->db = $this->mongo->testdb;
         $this->phactory = new Phactory($this->db);
@@ -16,6 +20,9 @@ class PhactoryTest extends \PHPUnit_Framework_TestCase
 
     protected function tearDown()
     {
+        if (!class_exists('Mongo')) {
+            return;
+        }
         $this->phactory->reset();
 
         $this->db->users->drop();
