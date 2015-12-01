@@ -21,12 +21,12 @@ class SqliteUtilTest extends \PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
-        $this->pdo->exec("DROP TABLE test_table");
+        $this->pdo->exec('DROP TABLE test_table');
     }
 
     public function testGetPrimaryKey()
     {
-        $this->pdo->exec("CREATE TABLE test_table ( id INTEGER PRIMARY KEY, name TEXT )");
+        $this->pdo->exec('CREATE TABLE test_table ( id INTEGER PRIMARY KEY, name TEXT )');
 
         $db_util = new SqliteUtil($this->phactory);
 
@@ -35,15 +35,14 @@ class SqliteUtilTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('id', $pk);
     }
 
-    public function testGetColumns() {
-        $this->pdo->exec("CREATE TABLE test_table ( id INTEGER PRIMARY KEY, name TEXT, email TEXT, age INTEGER )");
+    public function testGetColumns()
+    {
+        $this->pdo->exec('CREATE TABLE test_table ( id INTEGER PRIMARY KEY, name TEXT, email TEXT, age INTEGER )');
 
         $db_util = new SqliteUtil($this->phactory);
 
         $columns = $db_util->getColumns('test_table');
 
-        $this->assertEquals(array('id', 'name', 'email', 'age'), $columns);
+        $this->assertEquals(['id', 'name', 'email', 'age'], $columns);
     }
-
 }
-?>

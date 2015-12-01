@@ -10,7 +10,7 @@ class PhactoryTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         if (!class_exists('Mongo')) {
-            $this->markTestIncomplete("Mongo not installed.");
+            $this->markTestIncomplete('Mongo not installed.');
         }
 
         $this->mongo = new \Mongo();
@@ -49,13 +49,12 @@ class PhactoryTest extends \PHPUnit_Framework_TestCase
     public function testDefine()
     {
         // test that define() doesn't throw an exception when called correctly
-        $this->phactory->define('user', array('name' => 'testuser'));
+        $this->phactory->define('user', ['name' => 'testuser']);
     }
-
 
     public function testDefineWithBlueprint()
     {
-        $blueprint = new Blueprint('user', array('name' => 'testuser'), array(), $this->phactory);
+        $blueprint = new Blueprint('user', ['name' => 'testuser'], [], $this->phactory);
         $this->phactory->define('user', $blueprint);
 
         $user = $this->phactory->create('user');
@@ -65,17 +64,17 @@ class PhactoryTest extends \PHPUnit_Framework_TestCase
     public function testDefineWithAssociations()
     {
         $this->phactory->define('user',
-                         array('name' => 'testuser'),
-                         array('role' => $this->phactory->embedsOne('role')));
+                         ['name' => 'testuser'],
+                         ['role' => $this->phactory->embedsOne('role')]);
     }
 
     public function testCreate()
     {
         $name = 'testuser';
-        $tags = array('one','two','three');
+        $tags = ['one','two','three'];
 
         // define and create user in db
-        $this->phactory->define('user', array('name' => $name, 'tags' => $tags));
+        $this->phactory->define('user', ['name' => $name, 'tags' => $tags]);
         $user = $this->phactory->create('user');
 
         // test returned array
@@ -95,8 +94,8 @@ class PhactoryTest extends \PHPUnit_Framework_TestCase
         $override_name = 'override_user';
 
         // define and create user in db
-        $this->phactory->define('user', array('name' => $name));
-        $user = $this->phactory->create('user', array('name' => $override_name));
+        $this->phactory->define('user', ['name' => $name]);
+        $user = $this->phactory->create('user', ['name' => $override_name]);
 
         // test returned array
         $this->assertInternalType('array', $user);
@@ -110,26 +109,27 @@ class PhactoryTest extends \PHPUnit_Framework_TestCase
     public function testCreateWithAssociations()
     {
         $this->phactory->define('role',
-                         array('name' => 'admin'));
+                         ['name' => 'admin']);
         $this->phactory->define('user',
-                         array('name' => 'testuser'),
-                         array('role' => $this->phactory->embedsOne('role')));
+                         ['name' => 'testuser'],
+                         ['role' => $this->phactory->embedsOne('role')]);
 
         $role = $this->phactory->build('role');
-        $user = $this->phactory->createWithAssociations('user', array('role' => $role));
+        $user = $this->phactory->createWithAssociations('user', ['role' => $role]);
 
         $this->assertEquals($role['name'], $user['role']['name']);
     }
 
-    public function testCreateWithEmbedsManyAssociation() {
+    public function testCreateWithEmbedsManyAssociation()
+    {
         $this->phactory->define('tag',
-                         array('name' => 'Test Tag'));
+                         ['name' => 'Test Tag']);
         $this->phactory->define('blog',
-                         array('title' => 'Test Title'),
-                         array('tags' => $this->phactory->embedsMany('tag')));
+                         ['title' => 'Test Title'],
+                         ['tags' => $this->phactory->embedsMany('tag')]);
 
         $tag = $this->phactory->build('tag');
-        $blog = $this->phactory->createWithAssociations('blog', array('tags' => array($tag)));
+        $blog = $this->phactory->createWithAssociations('blog', ['tags' => [$tag]]);
 
         $this->assertEquals('Test Tag', $blog['tags'][0]['name']);
 
@@ -138,13 +138,13 @@ class PhactoryTest extends \PHPUnit_Framework_TestCase
 
     public function testDefineAndCreateWithSequence()
     {
-        $tags = array('foo$n','bar$n');
-        $this->phactory->define('user', array('name' => 'user\$n', 'tags' => $tags));
+        $tags = ['foo$n','bar$n'];
+        $this->phactory->define('user', ['name' => 'user\$n', 'tags' => $tags]);
 
-        for($i = 0; $i < 5; $i++) {
+        for ($i = 0; $i < 5; ++$i) {
             $user = $this->phactory->create('user');
             $this->assertEquals("user$i", $user['name']);
-            $this->assertEquals(array("foo$i","bar$i"),$user['tags']);
+            $this->assertEquals(["foo$i", "bar$i"], $user['tags']);
         }
     }
 
@@ -153,11 +153,11 @@ class PhactoryTest extends \PHPUnit_Framework_TestCase
         $name = 'testuser';
 
         // define and create user in db
-        $this->phactory->define('user', array('name' => $name));
+        $this->phactory->define('user', ['name' => $name]);
         $user = $this->phactory->create('user');
 
         // get() expected row from database
-        $db_user = $this->phactory->get('user', array('name' => $name));
+        $db_user = $this->phactory->get('user', ['name' => $name]);
 
         // test retrieved db row
         $this->assertInternalType('array', $db_user);
@@ -169,7 +169,7 @@ class PhactoryTest extends \PHPUnit_Framework_TestCase
         $name = 'testuser';
 
         // define and create user in db
-        $this->phactory->define('user', array('name' => $name));
+        $this->phactory->define('user', ['name' => $name]);
         $user = $this->phactory->create('user');
 
         // recall() deletes from the db
@@ -184,4 +184,3 @@ class PhactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($user['name'], $name);
     }
 }
-?>

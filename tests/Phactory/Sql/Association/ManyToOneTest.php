@@ -12,18 +12,18 @@ class ManyToOneTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->pdo = new \PDO("sqlite:test.db");
+        $this->pdo = new \PDO('sqlite:test.db');
         $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         $this->phactory = new Phactory($this->pdo);
-        $this->pdo->exec("CREATE TABLE users ( id INTEGER PRIMARY KEY, name TEXT )");
-        $this->pdo->exec("CREATE TABLE posts ( id INTEGER PRIMARY KEY, name TEXT, user_id INTEGER )");
+        $this->pdo->exec('CREATE TABLE users ( id INTEGER PRIMARY KEY, name TEXT )');
+        $this->pdo->exec('CREATE TABLE posts ( id INTEGER PRIMARY KEY, name TEXT, user_id INTEGER )');
     }
 
     protected function tearDown()
     {
         $this->phactory->reset();
-        $this->pdo->exec("DROP TABLE users");
-        $this->pdo->exec("DROP TABLE posts");
+        $this->pdo->exec('DROP TABLE users');
+        $this->pdo->exec('DROP TABLE posts');
     }
 
     public function testGuessFromColumn()

@@ -12,20 +12,20 @@ class ManyToManyTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->pdo = new \PDO("sqlite:test.db");
+        $this->pdo = new \PDO('sqlite:test.db');
         $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         $this->phactory = new Phactory($this->pdo);
-        $this->pdo->exec("CREATE TABLE users ( id INTEGER PRIMARY KEY, name TEXT )");
-        $this->pdo->exec("CREATE TABLE images ( id INTEGER PRIMARY KEY, filename TEXT)");
-        $this->pdo->exec("CREATE TABLE users_images ( user_id INTEGER, image_id INTEGER)");
+        $this->pdo->exec('CREATE TABLE users ( id INTEGER PRIMARY KEY, name TEXT )');
+        $this->pdo->exec('CREATE TABLE images ( id INTEGER PRIMARY KEY, filename TEXT)');
+        $this->pdo->exec('CREATE TABLE users_images ( user_id INTEGER, image_id INTEGER)');
     }
 
     protected function tearDown()
     {
         $this->phactory->reset();
-        $this->pdo->exec("DROP TABLE users");
-        $this->pdo->exec("DROP TABLE images");
-        $this->pdo->exec("DROP TABLE users_images");
+        $this->pdo->exec('DROP TABLE users');
+        $this->pdo->exec('DROP TABLE images');
+        $this->pdo->exec('DROP TABLE users_images');
     }
 
     public function testGuessFromColumn()

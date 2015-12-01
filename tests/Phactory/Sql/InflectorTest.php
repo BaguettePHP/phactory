@@ -18,21 +18,21 @@ class InflectorTest extends \PHPUnit_Framework_TestCase
 
     public function inflectionProvider()
     {
-        return array(
-            array('test', 'tests'),
-            array('octopus', 'octopuses'),
-            array('fish', 'fish'),
-            array('user', 'users'),
-        );
+        return [
+            ['test', 'tests'],
+            ['octopus', 'octopuses'],
+            ['fish', 'fish'],
+            ['user', 'users'],
+        ];
     }
 
     public function inflectionExceptionProvider()
     {
-        return array(
-            array('fish', 'fishes'),
-            array('content', 'content'),
-            array('anecdote', 'data'),
-        );
+        return [
+            ['fish', 'fishes'],
+            ['content', 'content'],
+            ['anecdote', 'data'],
+        ];
     }
 
     /**
