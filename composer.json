@@ -22,5 +22,10 @@
         "psr-4": {
             "Phactory\\": "src/"
         }
+    },
+    "scripts": {
+        "test": [
+            "php vendor/bin/phpunit"
+        ]
     }
 }
