@@ -1,6 +1,6 @@
 # Phactory: PHP Database Object Factory for Unit Testing
 
-[![Build Status](https://travis-ci.org/BaguettePHP/phactory.svg?branch=next)](https://travis-ci.org/BaguettePHP/phactory)
+[![Build Status](https://travis-ci.org/BaguettePHP/phactory.svg)](https://travis-ci.org/BaguettePHP/phactory)
 
 ## What is it?
 
